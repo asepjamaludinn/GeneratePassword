@@ -54,7 +54,7 @@ function generatePassword(input) {
   return password.join("");
 }
 
-//generate button dan sweet alert
+// button dan sweet alert
 generateButton.addEventListener("click", () => {
   const userInput = userInputField.value;
   if (userInput.length < 1) {
@@ -67,5 +67,42 @@ generateButton.addEventListener("click", () => {
   } else {
     const password = generatePassword(userInput);
     hasilPasswordElement.textContent = password;
+
+    // Copy
+    const copyButton = document.createElement("button");
+    copyButton.textContent = "Salin";
+    copyButton.className = "copy-button";
+    copyButton.onclick = async () => {
+      try {
+        await navigator.clipboard.writeText(password);
+        Swal.fire({
+          title: "Success!",
+          text: "Password telah disalin ke clipboard!",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
+      } catch (error) {
+        Swal.fire({
+          title: "Error!",
+          text: "Gagal menyalin password ke clipboard!",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+      }
+    };
+
+    // Reset button
+    const resetButton = document.createElement("button");
+    resetButton.textContent = "Reset";
+    resetButton.className = "reset-button";
+    resetButton.onclick = () => {
+      userInputField.value = "";
+      hasilPasswordElement.textContent = "";
+      copyButton.remove();
+      resetButton.remove();
+    };
+
+    hasilPasswordElement.parentNode.appendChild(copyButton);
+    hasilPasswordElement.parentNode.appendChild(resetButton);
   }
 });
